@@ -11,7 +11,7 @@
 
 ## Description
 
-A simple task manager built with HTML, CSS and JavaScript. Tasks are stored in a Supabase (PostgreSQL) database and accessed through the Supabase REST API. Users can create, view, edit, complete/incomplete and delete tasks. Changes persist after page refresh.
+A simple task manager built with HTML, CSS and JavaScript. Tasks are stored in a Supabase (PostgreSQL) database and accessed through the Supabase REST API. Users can create, view, edit, mark as completed or incomplete, and delete tasks. All changes persist after a page refresh.
 
 ## Technologies
 
