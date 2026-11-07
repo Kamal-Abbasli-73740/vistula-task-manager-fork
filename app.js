@@ -42,7 +42,7 @@ async function apiRequest(url, options = {}) {
       const body = await response.json();
       detail = body.message || '';
     } catch (_) {}
-    throw new Error(`İşlem başarısız (${response.status}). ${detail}`);
+    throw new Error(`Request failed (${response.status}). ${detail}`);
   }
   const text = await response.text();
   return text ? JSON.parse(text) : [];
@@ -50,17 +50,17 @@ async function apiRequest(url, options = {}) {
 
 function renderTasks() {
   if (tasks.length === 0) {
-    listEl.innerHTML = '<p>Henüz görev yok.</p>';
+    listEl.innerHTML = '<p>No tasks yet.</p>';
     return;
   }
   listEl.innerHTML = tasks.map(task => `
     <div class="task-item ${task.completed ? 'done' : ''}" data-id="${task.id}">
       <h3 class="task-title">${escapeHtml(task.title)}</h3>
       <p class="task-description">${escapeHtml(task.description)}</p>
-      <p class="task-status">${task.completed ? 'Tamamlandı' : 'Tamamlanmadı'}</p>
-      <button class="toggle-task">${task.completed ? 'Geri al' : 'Tamamla'}</button>
-      <button class="edit-task">Düzenle</button>
-      <button class="delete-task">Sil</button>
+      <p class="task-status">${task.completed ? 'Completed' : 'Not completed'}</p>
+      <button class="toggle-task">${task.completed ? 'Mark incomplete' : 'Mark complete'}</button>
+      <button class="edit-task">Edit</button>
+      <button class="delete-task">Delete</button>
     </div>
   `).join('');
 }
@@ -73,7 +73,7 @@ async function loadTasks() {
 function resetForm() {
   editingId = null;
   form.reset();
-  submitBtn.textContent = 'Ekle';
+  submitBtn.textContent = 'Add';
   cancelBtn.classList.add('hidden');
 }
 
@@ -81,7 +81,7 @@ function startEdit(task) {
   editingId = task.id;
   titleInput.value = task.title;
   descInput.value = task.description || '';
-  submitBtn.textContent = 'Kaydet';
+  submitBtn.textContent = 'Save';
   cancelBtn.classList.remove('hidden');
   titleInput.focus();
 }
@@ -93,15 +93,15 @@ async function toggleTask(task) {
   });
   Object.assign(task, updated);
   renderTasks();
-  showMessage('Görev durumu güncellendi.');
+  showMessage('Task status updated.');
 }
 
 async function deleteTask(task) {
-  if (!confirm(`"${task.title}" silinsin mi?`)) return;
+  if (!confirm(`Delete "${task.title}"?`)) return;
   await apiRequest(apiUrl(`?id=eq.${task.id}`), { method: 'DELETE' });
   tasks = tasks.filter(t => t.id !== task.id);
   renderTasks();
-  showMessage('Görev silindi.');
+  showMessage('Task deleted.');
 }
 
 listEl.addEventListener('click', async (event) => {
@@ -133,7 +133,7 @@ form.addEventListener('submit', async (event) => {
   const description = descInput.value.trim();
 
   if (!title) {
-    showMessage('Başlık boş olamaz.', 'error');
+    showMessage('Title cannot be empty.', 'error');
     return;
   }
 
@@ -144,7 +144,7 @@ form.addEventListener('submit', async (event) => {
         body: JSON.stringify({ title, description, completed: false })
       });
       tasks.push(created);
-      showMessage('Görev eklendi.');
+      showMessage('Task added.');
     } else {
       const [updated] = await apiRequest(apiUrl(`?id=eq.${editingId}`), {
         method: 'PATCH',
@@ -152,7 +152,7 @@ form.addEventListener('submit', async (event) => {
       });
       const index = tasks.findIndex(t => t.id === editingId);
       if (index !== -1) tasks[index] = updated;
-      showMessage('Görev güncellendi.');
+      showMessage('Task updated.');
     }
     resetForm();
     renderTasks();
@@ -164,7 +164,7 @@ form.addEventListener('submit', async (event) => {
 async function init() {
   try {
     const response = await fetch('config.json');
-    if (!response.ok) throw new Error('config.json yüklenemedi.');
+    if (!response.ok) throw new Error('Could not load config.json.');
     config = await response.json();
     await loadTasks();
   } catch (err) {
