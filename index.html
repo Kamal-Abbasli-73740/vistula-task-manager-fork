@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; background: #f5f6fa; color: #222; }
+    h1 { margin-bottom: 0.2rem; }
+    .student { color: #666; margin-top: 0; }
+    form, .task-item { background: #fff; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    label { display: block; font-weight: bold; }
+    input, textarea { width: 100%; padding: 0.5rem; margin: 0.3rem 0 0.8rem; box-sizing: border-box; font: inherit; }
+    button { padding: 0.4rem 0.8rem; margin-right: 0.3rem; cursor: pointer; }
+    .task-item.done .task-title { text-decoration: line-through; color: #888; }
+    .task-title { margin: 0 0 0.4rem; }
+    .task-description { color: #555; white-space: pre-wrap; }
+    .task-status { font-size: 0.9rem; font-weight: bold; }
+    #status-message { padding: 0.6rem; border-radius: 6px; min-height: 1.2rem; margin-bottom: 1rem; }
+    #status-message.ok { background: #e2f7e6; color: #060; }
+    #status-message.error { background: #fde2e2; color: #a00; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+  <p class="student">Student ID: <span id="student-id">74025</span></p>
+
+  <form id="task-form">
+    <label>Başlık *
+      <input id="task-title" type="text" required>
+    </label>
+    <label>Açıklama
+      <textarea id="task-description" rows="3"></textarea>
+    </label>
+    <button type="submit" id="task-submit">Ekle</button>
+    <button type="button" id="cancel-edit" class="hidden">İptal</button>
+  </form>
+
+  <div id="status-message"></div>
+  <div id="task-list"></div>
+
+  <p><a id="contribution-link" href="contribution.html">Team Contribution sayfası</a></p>
+
+  <script src="app.js"></script>
+</body>
+</html>
